@@ -105,10 +105,10 @@ footer.bottom a:hover{color:var(--bright)}
 </header>
 
 <section class="hero">
-  <div class="badge">◊·κ=1 · forge your stack</div>
+  <div class="badge">◊·κ=1 · free during launch</div>
   <h1>Describe your company.<br><span class="accent">Get a sovereign AI stack</span> in 60 seconds.</h1>
   <p class="lead">
-    Pick a tier. Tell us your vertical. Download a complete <strong>docker-compose</strong> stack with cascade routing, RAG, LoRA loop, signed Konomi licence — all branded for your company. Run <code>docker compose up</code>. Your on-prem brain is live.
+    Pick a tier. Tell us your vertical. Download a complete <strong>docker-compose</strong> stack with cascade routing, RAG, LoRA loop, signed Konomi licence — all branded for your company. Run <code>docker compose up</code>. Your on-prem brain is live. <strong>Free trial, no card, no commitment.</strong>
   </p>
 </section>
 
@@ -261,8 +261,8 @@ function renderTiers() {
   wrap.innerHTML = Object.entries(TIERS).map(([k, t]) => `
     <div class="tier-card" data-tier="${k}" onclick="selectTier('${k}')">
       <div class="tier-name">${t.name}</div>
-      <div class="tier-price">£${t.monthly}<span class="tier-per">/mo</span></div>
-      <div class="tier-meta">${t.model}<br>${t.vram} · ${t.savings} saved</div>
+      <div class="tier-price">${t.model.replace(':', ' ')}<span class="tier-per"> · ${t.vram}</span></div>
+      <div class="tier-meta">${t.savings} frontier reduction<br>free during launch</div>
     </div>
   `).join('');
 }
@@ -320,21 +320,20 @@ function buildSummary() {
   document.getElementById('summary').innerHTML =
     '<strong>company:</strong>       ' + (d.company || '(unset)') + '\n' +
     '<strong>vertical:</strong>      ' + (vert.name || d.vertical) + '\n' +
-    '<strong>tier:</strong>          ' + (tier.name || d.tier) + ' · £' + (tier.monthly || '?') + '/mo' + (tier.setup ? ' + £' + tier.setup + ' setup' : '') + '\n' +
+    '<strong>tier:</strong>          ' + (tier.name || d.tier) + ' · ' + (tier.model || '?') + ' · ' + (tier.vram || '?') + ' VRAM\n' +
     '<strong>model:</strong>         ' + (tier.model || '?') + ' (' + (tier.vram || '?') + ')\n' +
     '<strong>savings ratio:</strong> ' + (tier.savings || '?') + '\n' +
     '<strong>compliance:</strong>    ' + ((vert.compliance || []).join(', ') || 'none specified') + '\n' +
     '<strong>tools recommended:</strong> ' + ((vert.tools || []).join(', ') || 'none') + '\n' +
     '<strong>brand:</strong>         ' + d.brand_primary + ' / ' + d.brand_accent + '\n' +
     '<strong>frontier spend:</strong> ' + (d.frontier_spend_gbp ? '£' + d.frontier_spend_gbp.toLocaleString() + '/yr' : 'not declared');
-  // ROI callout
-  if (d.frontier_spend_gbp && tier.monthly) {
+  // ROI callout — free during launch, so savings = full frontier-reduction × spend
+  if (d.frontier_spend_gbp) {
     const ratio = parseFloat((tier.savings || '0').replace(/[~%]/g,''))/100;
-    const tierAnnual = tier.monthly * 12 + (tier.setup || 0);
-    const saved = Math.max(0, Math.round(d.frontier_spend_gbp * ratio - tierAnnual));
+    const saved = Math.round(d.frontier_spend_gbp * ratio);
     const callout = document.getElementById('savings-callout');
     callout.style.display = 'block';
-    callout.innerHTML = '<strong>Year 1 projected savings: £' + saved.toLocaleString() + '</strong>  ·  frontier spend £' + d.frontier_spend_gbp.toLocaleString() + ' × ' + (ratio*100) + '% saved − £' + tierAnnual.toLocaleString() + ' tier cost';
+    callout.innerHTML = '<strong>Year 1 frontier reduction: ~£' + saved.toLocaleString() + '</strong>  ·  ' + (ratio*100) + '% of your declared frontier spend answered locally. Software cost during launch: <strong>£0</strong>.';
   }
 }
 

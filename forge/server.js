@@ -37,10 +37,10 @@ try { if (fs.existsSync(STATE_FILE)) STATE = Object.assign(STATE, JSON.parse(fs.
 function persistState() { try { fs.writeFileSync(STATE_FILE, JSON.stringify(STATE, null, 2)); } catch (_) {} }
 
 const TIERS = {
-  lite:       { id:'lite',       name:'Lite',       monthly:297,  setup:0,     model:'llama3.1:8b',     vram:'8GB',  savings:'~40%',  desc:'For teams burning £20-50k/yr on frontier. We host on dedicated single-tenant GPU.' },
-  pro:        { id:'pro',        name:'Pro',        monthly:997,  setup:5000,  model:'qwen2.5:32b',     vram:'24GB', savings:'~75%',  desc:'For teams burning £50-200k/yr. We deploy on your infra. Weekly LoRA fine-tune.' },
-  sovereign:  { id:'sovereign',  name:'Sovereign',  monthly:1997, setup:25000, model:'qwen2.5:72b',     vram:'48GB', savings:'~95%',  desc:'For regulated industries. You own the hardware. We install + maintain quarterly.' },
-  enterprise: { id:'enterprise', name:'Enterprise', monthly:4997, setup:0,     model:'qwen2.5:72b',     vram:'48GB+',savings:'~99%',  desc:'Multi-region, multi-tenant, custom compliance certifications, white-label.' }
+  lite:       { id:'lite',       name:'Lite',       model:'llama3.1:8b',     vram:'8GB',   savings:'~40%',  desc:'For laptops and small teams. Runs on consumer GPUs (or CPU only at low volume).' },
+  pro:        { id:'pro',        name:'Pro',        model:'qwen2.5:32b',     vram:'24GB',  savings:'~75%',  desc:'For departmental deployments. Single workstation-class GPU. Weekly LoRA fine-tune.' },
+  sovereign:  { id:'sovereign',  name:'Sovereign',  model:'qwen2.5:72b',     vram:'48GB',  savings:'~95%',  desc:'For regulated industries · finance, healthcare, legal. Server-class hardware.' },
+  enterprise: { id:'enterprise', name:'Enterprise', model:'qwen2.5:72b',     vram:'48GB+', savings:'~99%',  desc:'Multi-region, multi-tenant, custom certifications, white-label.' }
 };
 
 const VERTICALS = {
@@ -219,9 +219,8 @@ app.post('/v1/forge/fallcore', (req, res) => {
     const brandBg = String(input.brand_bg || '#0a0c10').trim();
 
     const frontierSpend = parseInt(input.frontier_spend_gbp || 0, 10);
-    const tierAnnual = tier.monthly * 12 + tier.setup;
     const savingsRatio = parseFloat(tier.savings.replace(/[~%]/g,''))/100;
-    const savingsYear1 = Math.max(0, Math.round(frontierSpend * savingsRatio - tierAnnual));
+    const savingsYear1 = Math.max(0, Math.round(frontierSpend * savingsRatio));
 
     const trialLicenceB64 = signTrialLicence(slug, prime, 30, tierKey) || '';
 
@@ -230,7 +229,7 @@ app.post('/v1/forge/fallcore', (req, res) => {
       vertical_name: vertical.name, vertical_slug: vertical.id,
       tier_name: tier.name, tier_slug: tier.id,
       model: tier.model, vram: tier.vram, savings: tier.savings,
-      monthly: tier.monthly, setup: tier.setup,
+      monthly: 0, setup: 0,    // pricing not set during free-trial launch
       prime, brand_primary: brandPrimary, brand_accent: brandAccent, brand_bg: brandBg,
       compliance_list: vertical.compliance.join(', ') || 'none',
       tools_list: vertical.tools.join(' · '),
@@ -330,9 +329,9 @@ app.post('/v1/forge/fallcore', (req, res) => {
       '',
       '## Your projected ROI',
       '',
-      '- Frontier spend declared:    £' + frontierSpend.toLocaleString(),
-      '- Tier annual cost:           £' + tierAnnual.toLocaleString() + (tier.setup ? ' (incl. £' + tier.setup.toLocaleString() + ' setup)' : ''),
-      '- Year 1 savings (projected): **£' + savingsYear1.toLocaleString() + '** (based on ' + tier.savings + ' frontier savings ratio)',
+      '- Frontier spend declared:        £' + frontierSpend.toLocaleString(),
+      '- Year 1 frontier-call reduction: ' + tier.savings + ' (~£' + savingsYear1.toLocaleString() + ' saved at this spend)',
+      '- FallCore software cost:         **£0** during launch (free trial · open source · MIT)',
       '',
       '## Recommended Fall* tools for ' + vertical.name,
       '',

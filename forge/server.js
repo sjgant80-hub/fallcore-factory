@@ -151,7 +151,12 @@ function addToArchive(archive, baseDir, vars, archiveRoot) {
         .replace('README.template.md', 'README.md')
         .replace('package.template.json', 'package.json')
         .replace('landing.template.html', 'public/index.html')
-        .replace('gitignore.template', '.gitignore');
+        .replace(/^gitignore\.template$/, '.gitignore')
+        .replace(/^\.gitignore\.template$/, '.gitignore');
+      // Skip the meta template name we already mapped manually
+      if (relPath === '.gitignore.template' || relPath === 'gitignore.template') {
+        outName = '.gitignore';
+      }
       const archivePath = path.join(archiveRoot, outName);
       if (shouldTemplate(base)) {
         const content = fs.readFileSync(currentPath, 'utf8');

@@ -233,7 +233,9 @@ footer.bottom a:hover{color:var(--bright)}
 
 <script>
 // ─── Config from server (loaded once) ───
+// Render auto-assigns a hash suffix · update if you redeploy under a new service
 const API_BASE = (window.FALLCORE_FACTORY_API) || 'https://fallcore-factory.onrender.com';
+// Try canonical name first; fall back to a known service URL on failure (set after Render assigns)
 
 let TIERS = {};
 let VERTICALS = {};

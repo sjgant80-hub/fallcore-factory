@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FallCore Factory · forge a sovereign AI stack for your company</title>
+<meta name="description" content="Describe your company. Pick a tier. Download your branded FallCore — complete docker-compose stack with cascade, RAG, LoRA loop, signed Konomi licence. One zip. docker compose up. Your own on-prem brain in 5 minutes.">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0c10; --surface:#10131a; --s2:#161a23; --border:#22272f;
+  --text:#cdd3dc; --dim:#7a808c; --bright:#f0f3f7;
+  --primary:#22c55e; --accent:#d4af37; --warn:#c87e3a; --fail:#c84a4a;
+  --ring:rgba(34,197,94,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{font-family:'Syne',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;font-size:16px;min-height:100vh}
+code,pre,.mono{font-family:'DM Mono',ui-monospace,monospace}
+header.top{padding:18px 30px;display:flex;align-items:center;gap:18px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:10}
+.brand{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:.02em;font-size:18px;color:var(--bright)}
+.brand .dot{width:11px;height:11px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 4px var(--ring)}
+.brand .sub{font-size:11px;color:var(--dim);letter-spacing:.18em;text-transform:uppercase;margin-left:6px}
+nav.top-nav{margin-left:auto;display:flex;gap:18px}
+nav.top-nav a{color:var(--dim);text-decoration:none;font-size:14px}
+nav.top-nav a:hover{color:var(--bright)}
+.hero{padding:60px 30px 30px;text-align:center;max-width:900px;margin:0 auto}
+.hero .badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:var(--s2);border:1px solid var(--border);color:var(--accent);font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px;font-family:'DM Mono',monospace}
+.hero h1{font-size:40px;line-height:1.1;color:var(--bright);font-weight:800;letter-spacing:-.02em;margin-bottom:18px}
+.hero h1 .accent{color:var(--primary)}
+.hero .lead{font-size:17px;color:var(--text);max-width:680px;margin:0 auto;line-height:1.55}
+.hero .lead strong{color:var(--bright);font-weight:600}
+
+.wizard{max-width:780px;margin:30px auto;padding:0 30px 60px}
+.wizard .steps{display:flex;justify-content:space-between;gap:8px;margin-bottom:24px;font-family:'DM Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
+.wizard .steps .step{padding:5px 9px;border-radius:6px;background:var(--s2);border:1px solid var(--border);flex:1;text-align:center}
+.wizard .steps .step.active{background:var(--ring);border-color:var(--primary);color:var(--primary);font-weight:700}
+.wizard .steps .step.done{color:var(--bright);border-color:var(--primary)}
+
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:30px}
+.panel h2{font-size:22px;color:var(--bright);font-weight:700;margin-bottom:6px;letter-spacing:-.01em}
+.panel .sub{font-size:13px;color:var(--dim);margin-bottom:20px}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:12px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;font-family:'DM Mono',monospace;font-weight:700}
+.field input,.field select,.field textarea{width:100%;background:var(--s2);border:1px solid var(--border);color:var(--bright);font:inherit;padding:11px 14px;border-radius:9px;font-size:15px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--primary)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.field-row{grid-template-columns:1fr}}
+.field-hint{font-size:12px;color:var(--dim);margin-top:5px}
+
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:12px}
+.tier-card{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:all .15s}
+.tier-card:hover{border-color:var(--primary)}
+.tier-card.selected{border-color:var(--primary);background:var(--ring)}
+.tier-card .tier-name{font-size:13px;color:var(--bright);font-weight:700;margin-bottom:2px}
+.tier-card .tier-price{font-size:20px;color:var(--primary);font-weight:700}
+.tier-card .tier-per{font-size:10px;color:var(--dim)}
+.tier-card .tier-meta{font-size:10px;color:var(--dim);margin-top:6px;letter-spacing:.04em;font-family:'DM Mono',monospace}
+
+.vert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.vert-card{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;font-size:13px;color:var(--text)}
+.vert-card:hover{border-color:var(--primary);color:var(--bright)}
+.vert-card.selected{border-color:var(--primary);background:var(--ring);color:var(--primary);font-weight:600}
+
+.summary{background:#06080c;border:1px solid var(--border);border-radius:10px;padding:18px;font-family:'DM Mono',monospace;font-size:12px;color:#9aa0ac;line-height:1.7;margin-bottom:16px;white-space:pre-wrap}
+.summary strong{color:var(--bright)}
+.savings-callout{background:var(--ring);border-left:3px solid var(--primary);padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:16px;font-size:14px;color:var(--text)}
+.savings-callout strong{color:var(--primary);font-weight:700}
+
+.actions{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:18px}
+.btn{background:var(--primary);color:#000;border:none;padding:13px 24px;border-radius:8px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.btn:hover{filter:brightness(1.05)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn.big{padding:16px 28px;font-size:16px}
+
+#status{font-size:13px;color:var(--dim);margin-top:14px;font-family:'DM Mono',monospace}
+#status.ok{color:var(--primary)}
+#status.fail{color:var(--fail)}
+
+.done-card{text-align:center;padding:30px 20px}
+.done-card .glyph{font-size:64px;color:var(--primary);margin-bottom:14px}
+.done-card h2{margin-bottom:8px}
+.done-card p{color:var(--text);margin-bottom:18px;font-size:15px}
+.done-card .next{background:#06080c;border:1px solid var(--border);border-radius:10px;padding:16px;text-align:left;font-family:'DM Mono',monospace;font-size:12px;color:#9aa0ac;margin:20px 0}
+.done-card .next strong{color:var(--bright)}
+
+footer.bottom{padding:30px;border-top:1px solid var(--border);text-align:center;color:var(--dim);font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-family:'DM Mono',monospace}
+footer.bottom a{color:var(--dim);text-decoration:none}
+footer.bottom a:hover{color:var(--bright)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <span class="dot"></span>
+    <span>FallCore Factory</span>
+    <span class="sub">forge · sovereign · on-prem</span>
+  </div>
+  <nav class="top-nav">
+    <a href="https://sjgant80-hub.github.io/fallcore/">FallCore</a>
+    <a href="https://github.com/sjgant80-hub/fallcore-factory">Source</a>
+    <a href="https://github.com/sjgant80-hub">Estate</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="badge">◊·κ=1 · forge your stack</div>
+  <h1>Describe your company.<br><span class="accent">Get a sovereign AI stack</span> in 60 seconds.</h1>
+  <p class="lead">
+    Pick a tier. Tell us your vertical. Download a complete <strong>docker-compose</strong> stack with cascade routing, RAG, LoRA loop, signed Konomi licence — all branded for your company. Run <code>docker compose up</code>. Your on-prem brain is live.
+  </p>
+</section>
+
+<div class="wizard">
+
+  <div class="steps">
+    <div class="step active" data-step="1">1 · Company</div>
+    <div class="step" data-step="2">2 · Vertical</div>
+    <div class="step" data-step="3">3 · Tier</div>
+    <div class="step" data-step="4">4 · Brand</div>
+    <div class="step" data-step="5">5 · Forge</div>
+  </div>
+
+  <!-- STEP 1: COMPANY -->
+  <div class="panel" id="step-1">
+    <h2>About your company</h2>
+    <div class="sub">Just the basics. Stays in your ZIP — nothing leaves this page until you click "Forge".</div>
+    <div class="field">
+      <label>Company name *</label>
+      <input id="f-company" placeholder="e.g. Acme Logistics" maxlength="80">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Short name (for nav)</label>
+        <input id="f-short" placeholder="e.g. Acme" maxlength="24">
+        <div class="field-hint">Defaults to first word if blank</div>
+      </div>
+      <div class="field">
+        <label>Contact email</label>
+        <input id="f-email" type="email" placeholder="ops@acme.example">
+        <div class="field-hint">Optional · for the install README</div>
+      </div>
+    </div>
+    <div class="actions">
+      <span></span>
+      <button class="btn" onclick="goto(2)">Next →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: VERTICAL -->
+  <div class="panel" id="step-2" style="display:none">
+    <h2>Pick your vertical</h2>
+    <div class="sub">We pre-configure compliance, system prompts, and recommend Fall* tools for your domain.</div>
+    <div class="vert-grid" id="vert-grid"></div>
+    <div class="actions">
+      <button class="btn ghost" onclick="goto(1)">← Back</button>
+      <button class="btn" onclick="goto(3)" id="step2-next" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: TIER -->
+  <div class="panel" id="step-3" style="display:none">
+    <h2>Pick a tier</h2>
+    <div class="sub">Hardware reqs, savings ratio, and pricing for each. You can change later.</div>
+    <div class="tier-grid" id="tier-grid"></div>
+    <div class="field">
+      <label>Current annual frontier-API spend (£) · for ROI projection</label>
+      <input id="f-spend" type="number" placeholder="e.g. 85000" min="0" max="100000000">
+      <div class="field-hint">Optional · used to project year-1 savings</div>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" onclick="goto(2)">← Back</button>
+      <button class="btn" onclick="goto(4)" id="step3-next" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: BRAND -->
+  <div class="panel" id="step-4" style="display:none">
+    <h2>Brand the stack</h2>
+    <div class="sub">Your internal landing page (your team sees this when they open the stack) gets these colours.</div>
+    <div class="field-row">
+      <div class="field">
+        <label>Primary colour</label>
+        <input id="f-primary" type="color" value="#22c55e">
+      </div>
+      <div class="field">
+        <label>Accent colour</label>
+        <input id="f-accent" type="color" value="#d4af37">
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" onclick="goto(3)">← Back</button>
+      <button class="btn" onclick="goto(5)">Next →</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: FORGE -->
+  <div class="panel" id="step-5" style="display:none">
+    <h2>Review and forge</h2>
+    <div class="sub">Quick check before you download. The factory will: allocate a unique prime · sign a 30-day Konomi trial · template every file · zip it up.</div>
+    <div id="summary" class="summary"></div>
+    <div id="savings-callout" class="savings-callout" style="display:none"></div>
+    <div class="actions">
+      <button class="btn ghost" onclick="goto(4)">← Back</button>
+      <button class="btn big" id="forge-btn" onclick="doForge()">⚡ Forge my FallCore</button>
+    </div>
+    <div id="status"></div>
+  </div>
+
+  <!-- DONE -->
+  <div class="panel done-card" id="done" style="display:none">
+    <div class="glyph">◊</div>
+    <h2 id="done-title">Forged.</h2>
+    <p id="done-sub"></p>
+    <div class="next" id="done-next"></div>
+    <div class="actions" style="justify-content:center">
+      <button class="btn" onclick="window.location.reload()">Forge another</button>
+    </div>
+  </div>
+
+</div>
+
+<footer class="bottom">
+  <div>◊·κ=1 · FallCore Factory · MIT licensed · part of the Fall* estate</div>
+  <div style="margin-top:6px">
+    <a href="https://sjgant80-hub.github.io/fallcore/">FallCore</a> ·
+    <a href="https://github.com/sjgant80-hub/fallcore-factory">Source</a> ·
+    <a href="https://github.com/sjgant80-hub">Estate</a> ·
+    <a href="https://ai-nativesolutions.com">AI Native Solutions</a>
+  </div>
+</footer>
+
+<script>
+// ─── Config from server (loaded once) ───
+const API_BASE = (window.FALLCORE_FACTORY_API) || 'https://fallcore-factory.onrender.com';
+
+let TIERS = {};
+let VERTICALS = {};
+const FORM = { tier: null, vertical: null };
+
+async function loadConfig() {
+  try {
+    const [tr, vr] = await Promise.all([
+      fetch(API_BASE + '/v1/tiers').then(r => r.json()),
+      fetch(API_BASE + '/v1/verticals').then(r => r.json())
+    ]);
+    TIERS = tr.tiers || {};
+    VERTICALS = vr.verticals || {};
+    renderTiers(); renderVerticals();
+  } catch (e) {
+    document.getElementById('status').className = 'fail';
+    document.getElementById('status').textContent = 'Factory backend unreachable. Source available at github.com/sjgant80-hub/fallcore-factory · self-host if needed.';
+  }
+}
+
+function renderTiers() {
+  const wrap = document.getElementById('tier-grid');
+  wrap.innerHTML = Object.entries(TIERS).map(([k, t]) => `
+    <div class="tier-card" data-tier="${k}" onclick="selectTier('${k}')">
+      <div class="tier-name">${t.name}</div>
+      <div class="tier-price">£${t.monthly}<span class="tier-per">/mo</span></div>
+      <div class="tier-meta">${t.model}<br>${t.vram} · ${t.savings} saved</div>
+    </div>
+  `).join('');
+}
+
+function renderVerticals() {
+  const wrap = document.getElementById('vert-grid');
+  wrap.innerHTML = Object.entries(VERTICALS).map(([k, v]) => `
+    <div class="vert-card" data-vertical="${k}" onclick="selectVertical('${k}')">${v.name}</div>
+  `).join('');
+}
+
+function selectTier(k) {
+  FORM.tier = k;
+  document.querySelectorAll('.tier-card').forEach(el => el.classList.toggle('selected', el.dataset.tier === k));
+  document.getElementById('step3-next').disabled = false;
+}
+function selectVertical(k) {
+  FORM.vertical = k;
+  document.querySelectorAll('.vert-card').forEach(el => el.classList.toggle('selected', el.dataset.vertical === k));
+  document.getElementById('step2-next').disabled = false;
+}
+
+function goto(n) {
+  // Validate step 1 → company name required
+  if (n >= 2 && !document.getElementById('f-company').value.trim()) {
+    alert('Company name is required');
+    return;
+  }
+  if (n === 5) buildSummary();
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById('step-' + i).style.display = i === n ? 'block' : 'none';
+    document.querySelector('.step[data-step="' + i + '"]').classList.toggle('active', i === n);
+    document.querySelector('.step[data-step="' + i + '"]').classList.toggle('done', i < n);
+  }
+}
+
+function getFormData() {
+  return {
+    company: document.getElementById('f-company').value.trim(),
+    short: document.getElementById('f-short').value.trim(),
+    email: document.getElementById('f-email').value.trim(),
+    tier: FORM.tier || 'pro',
+    vertical: FORM.vertical || 'other',
+    brand_primary: document.getElementById('f-primary').value,
+    brand_accent: document.getElementById('f-accent').value,
+    brand_bg: '#0a0c10',
+    frontier_spend_gbp: parseInt(document.getElementById('f-spend').value || 0, 10)
+  };
+}
+
+function buildSummary() {
+  const d = getFormData();
+  const tier = TIERS[d.tier] || {};
+  const vert = VERTICALS[d.vertical] || {};
+  document.getElementById('summary').innerHTML =
+    '<strong>company:</strong>       ' + (d.company || '(unset)') + '\n' +
+    '<strong>vertical:</strong>      ' + (vert.name || d.vertical) + '\n' +
+    '<strong>tier:</strong>          ' + (tier.name || d.tier) + ' · £' + (tier.monthly || '?') + '/mo' + (tier.setup ? ' + £' + tier.setup + ' setup' : '') + '\n' +
+    '<strong>model:</strong>         ' + (tier.model || '?') + ' (' + (tier.vram || '?') + ')\n' +
+    '<strong>savings ratio:</strong> ' + (tier.savings || '?') + '\n' +
+    '<strong>compliance:</strong>    ' + ((vert.compliance || []).join(', ') || 'none specified') + '\n' +
+    '<strong>tools recommended:</strong> ' + ((vert.tools || []).join(', ') || 'none') + '\n' +
+    '<strong>brand:</strong>         ' + d.brand_primary + ' / ' + d.brand_accent + '\n' +
+    '<strong>frontier spend:</strong> ' + (d.frontier_spend_gbp ? '£' + d.frontier_spend_gbp.toLocaleString() + '/yr' : 'not declared');
+  // ROI callout
+  if (d.frontier_spend_gbp && tier.monthly) {
+    const ratio = parseFloat((tier.savings || '0').replace(/[~%]/g,''))/100;
+    const tierAnnual = tier.monthly * 12 + (tier.setup || 0);
+    const saved = Math.max(0, Math.round(d.frontier_spend_gbp * ratio - tierAnnual));
+    const callout = document.getElementById('savings-callout');
+    callout.style.display = 'block';
+    callout.innerHTML = '<strong>Year 1 projected savings: £' + saved.toLocaleString() + '</strong>  ·  frontier spend £' + d.frontier_spend_gbp.toLocaleString() + ' × ' + (ratio*100) + '% saved − £' + tierAnnual.toLocaleString() + ' tier cost';
+  }
+}
+
+async function doForge() {
+  const d = getFormData();
+  const btn = document.getElementById('forge-btn');
+  const status = document.getElementById('status');
+  btn.disabled = true; btn.textContent = '⚡ forging…';
+  status.className = '';
+  status.textContent = 'Allocating prime, signing licence, templating files, zipping…';
+  try {
+    const r = await fetch(API_BASE + '/v1/forge/fallcore', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(d)
+    });
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({ error: 'http ' + r.status }));
+      throw new Error(err.error || ('http ' + r.status));
+    }
+    const forgeId = r.headers.get('x-fallcore-forge-id') || '?';
+    const prime = r.headers.get('x-fallcore-prime') || '?';
+    const blob = await r.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (d.company || 'fallcore').toLowerCase().replace(/[^a-z0-9]+/g,'-') + '-fallcore.zip';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    // Show done
+    document.getElementById('step-5').style.display = 'none';
+    const done = document.getElementById('done');
+    done.style.display = 'block';
+    document.getElementById('done-title').textContent = '◊ Forged ' + d.company;
+    document.getElementById('done-sub').innerHTML = 'Prime <strong>' + prime + '</strong> · forge ID <code>' + forgeId + '</code> · 30-day Konomi trial signed · ZIP downloading.';
+    document.getElementById('done-next').innerHTML =
+      '<strong>Next steps inside the ZIP:</strong>\n\n' +
+      '1. Unzip into your project dir\n' +
+      '2. <strong>cp .env.example .env</strong>\n' +
+      '3. <strong>docker compose up -d</strong>\n' +
+      '4. <strong>docker compose exec ollama ollama pull ' + (TIERS[d.tier] || {}).model + '</strong>\n' +
+      '5. Point your apps: <strong>ANTHROPIC_BASE_URL=http://your-host:11434</strong>\n' +
+      '6. After 1 week: <strong>node eval/replay.js --days 7</strong> for your ROI report';
+  } catch (e) {
+    btn.disabled = false; btn.textContent = '⚡ Forge my FallCore';
+    status.className = 'fail';
+    status.textContent = 'forge failed: ' + e.message;
+  }
+}
+
+loadConfig();
+</script>
+</body>
+</html>

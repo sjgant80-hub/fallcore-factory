@@ -1,0 +1,18 @@
+{
+  "name": "fallcore-factory",
+  "version": "0.1.0",
+  "description": "◊·κ=1 · the factory that mints branded FallCore deployments. Customer describes their org → out comes a complete docker-compose stack with branding, prime, signed Konomi licence, ready to docker compose up.",
+  "main": "forge/server.js",
+  "scripts": {
+    "start": "node forge/server.js",
+    "dev": "node forge/server.js"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "express": "^4.21.1",
+    "cors": "^2.8.5",
+    "archiver": "^7.0.1"
+  },
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/sjgant80-hub/fallcore-factory" }
+}
